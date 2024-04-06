@@ -21,6 +21,8 @@ export function ScriptMatcher({
   defaultScriptIndex,
 }: Props) {
   const [value, setValue] = useState("");
+  const [wrongCounter, setWrongCounter] = useState(0);
+  const [successCounter, setSuccessCounter] = useState(0);
   const [currentScripts, setCurrentScripts] = useState(scripts);
   const [scriptIndex, setScriptIndex] = useState(defaultScriptIndex);
 
@@ -35,6 +37,7 @@ export function ScriptMatcher({
     if (scriptIndex !== undefined) {
       newScripts = [...currentScripts];
       newScripts.splice(scriptIndex, 1);
+      setSuccessCounter((state) => ++state);
       setCurrentScripts(newScripts);
     }
 
@@ -47,7 +50,12 @@ export function ScriptMatcher({
   };
 
   const handleOnKeyDown = (event: KeyboardEvent<HTMLInputElement>) => {
-    if (scriptIndex === undefined || event.code !== "Enter") return;
+    if (scriptIndex === undefined) return;
+
+    if (event.code !== "Enter") {
+      setWrongCounter((state) => ++state);
+      return;
+    }
 
     if (event.currentTarget.value === currentScripts[scriptIndex]?.romaji) {
       success();
@@ -72,6 +80,7 @@ export function ScriptMatcher({
       if (value === romaji) {
         success();
       } else {
+        setWrongCounter((state) => ++state);
         reset();
       }
     } else {
@@ -90,6 +99,11 @@ export function ScriptMatcher({
         </>
       ) : (
         <>
+          <div className="absolute right-0 top-0 m-4 rounded-xl bg-white/10 p-4">
+            <p>{`Remaining: ${currentScripts.length}`}</p>
+            <p>{`Success: ${successCounter}`}</p>
+            <p>{`Wrong: ${wrongCounter}`}</p>
+          </div>
           <h1 className="text-7xl font-extrabold tracking-tight text-white sm:text-8xl">
             {getScript(scriptIndex, currentScripts)?.[scriptType]}
           </h1>
