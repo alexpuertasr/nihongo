@@ -50,14 +50,14 @@ export function ScriptMatcher({
   };
 
   const handleOnKeyDown = (event: KeyboardEvent<HTMLInputElement>) => {
-    if (scriptIndex === undefined) return;
+    if (scriptIndex === undefined || event.code !== "Enter") return;
 
-    if (event.code !== "Enter") {
+    const script = getScript(scriptIndex, currentScripts);
+    if (!script) return;
+
+    if (event.currentTarget.value !== script.romaji) {
       setWrongCounter((state) => ++state);
-      return;
-    }
-
-    if (event.currentTarget.value === currentScripts[scriptIndex]?.romaji) {
+    } else {
       success();
     }
   };
