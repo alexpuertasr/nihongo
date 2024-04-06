@@ -56,7 +56,10 @@ export function ScriptMatcher({
       const romaji = currentScripts[scriptIndex].romaji;
       const value = event.target.value;
 
-      if (value.length !== romaji.length) return;
+      if (value.length !== romaji.length) {
+        setValue(event.target.value);
+        return;
+      }
 
       if (value === romaji) {
         success();
