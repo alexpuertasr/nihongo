@@ -2,7 +2,12 @@
 
 import { type ChangeEvent, type KeyboardEvent, useState } from "react";
 
-import { type Script, getRandomScriptIndex, scripts } from "@/lib/scripts";
+import {
+  type Script,
+  getRandomScriptIndex,
+  getScript,
+  scripts,
+} from "@/lib/scripts";
 
 interface Props {
   isQuickMode: boolean;
@@ -50,10 +55,13 @@ export function ScriptMatcher({
   };
 
   const handleOnChange = (event: ChangeEvent<HTMLInputElement>) => {
-    if (isQuickMode) {
-      if (scriptIndex === undefined || !currentScripts[scriptIndex]) return;
+    if (scriptIndex === undefined) return;
 
-      const romaji = currentScripts[scriptIndex].romaji;
+    if (isQuickMode) {
+      const script = getScript(scriptIndex, currentScripts);
+      if (!script) return;
+
+      const romaji = script.romaji;
       const value = event.target.value;
 
       if (value.length !== romaji.length) {
@@ -83,9 +91,7 @@ export function ScriptMatcher({
       ) : (
         <>
           <h1 className="text-7xl font-extrabold tracking-tight text-white sm:text-8xl">
-            {scriptIndex !== undefined && currentScripts[scriptIndex]
-              ? currentScripts[scriptIndex][scriptType]
-              : null}
+            {getScript(scriptIndex, currentScripts)?.[scriptType]}
           </h1>
           <input
             autoFocus

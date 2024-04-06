@@ -111,6 +111,14 @@ export const scripts: Script[] = [
   { romaji: "pyo", hiragana: "ぴょ", katakana: "ピョ" },
 ];
 
+export const getScript = (
+  index: number | undefined,
+  _scripts: Script[] = scripts,
+) => {
+  if (index === undefined) return;
+  return _scripts[index];
+};
+
 export const getRandomScriptIndex = (_scripts: Script[] = scripts) => {
   if (_scripts.length === 0) return undefined;
   return Math.floor(Math.random() * _scripts.length);
