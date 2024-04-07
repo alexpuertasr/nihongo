@@ -13,6 +13,10 @@ export const metadata = {
   icons: [{ rel: "icon", url: "/favicon.svg" }],
 };
 
+export const viewport = {
+  interactiveWidget: "resizes-content",
+};
+
 export default function RootLayout({
   children,
 }: {
@@ -21,7 +25,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`font-sans ${inter.variable}`}>
-        <main className="flex h-dvh flex-col items-center justify-center gap-4 bg-gradient-to-b from-[#111827] to-[#030712] text-white">
+        <main className="flex h-dvh flex-col bg-gradient-to-b from-[#111827] to-[#030712] text-white">
           {children}
         </main>
       </body>
