@@ -1,6 +1,7 @@
 "use client";
 
 import { type ChangeEvent, type KeyboardEvent, useRef, useState } from "react";
+import { PiEyeBold, PiEyeSlashBold } from "react-icons/pi";
 
 import {
   type Script,
@@ -21,18 +22,21 @@ export function ScriptMatcher({
   defaultScriptIndex,
 }: Props) {
   const [value, setValue] = useState("");
+  const [isRevealed, setIsRevealed] = useState(false);
   const [wrongCounter, setWrongCounter] = useState(0);
   const [successCounter, setSuccessCounter] = useState(0);
   const [currentScripts, setCurrentScripts] = useState(scripts);
   const [scriptIndex, setScriptIndex] = useState(defaultScriptIndex);
   const scriptRef = useRef<HTMLHeadingElement>(null);
 
+  const script = getScript(scriptIndex, currentScripts) ?? null;
+
   const onReset = (scripts: Script[] = currentScripts) => {
     setScriptIndex(getRandomScriptIndex(scripts));
     setValue("");
   };
 
-  const onSuccess = () => {
+  const onCorrect = () => {
     let newScripts;
 
     if (scriptIndex !== undefined) {
@@ -45,7 +49,7 @@ export function ScriptMatcher({
     onReset(newScripts);
   };
 
-  const onFail = () => {
+  const onWrong = () => {
     setWrongCounter((state) => ++state);
 
     if (scriptRef.current) {
@@ -64,25 +68,19 @@ export function ScriptMatcher({
   };
 
   const handleOnKeyDown = (event: KeyboardEvent<HTMLInputElement>) => {
-    if (scriptIndex === undefined || event.code !== "Enter") return;
-
-    const script = getScript(scriptIndex, currentScripts);
-    if (!script) return;
+    if (!script || event.code !== "Enter") return;
 
     if (event.currentTarget.value === script.romaji) {
-      onSuccess();
+      onCorrect();
     } else {
-      onFail();
+      onWrong();
     }
   };
 
   const handleOnChange = (event: ChangeEvent<HTMLInputElement>) => {
-    if (scriptIndex === undefined) return;
+    if (!script) return;
 
     if (isQuickMode) {
-      const script = getScript(scriptIndex, currentScripts);
-      if (!script) return;
-
       const romaji = script.romaji;
       const value = event.target.value;
 
@@ -92,9 +90,9 @@ export function ScriptMatcher({
       }
 
       if (value === romaji) {
-        onSuccess();
+        onCorrect();
       } else {
-        onFail();
+        onWrong();
         onReset();
       }
     } else {
@@ -105,7 +103,7 @@ export function ScriptMatcher({
   return (
     <>
       <div className="container flex flex-col items-center justify-center gap-12 px-4 py-16">
-        {scriptIndex === undefined ? (
+        {!currentScripts.length ? (
           <>
             <h1 className="text-5xl font-extrabold tracking-tight text-white sm:text-[5rem]">
               Congrats! 🎉
@@ -122,15 +120,21 @@ export function ScriptMatcher({
                 }}
               />
             </div>
+            <div
+              className="fixed left-14 top-2.5 m-4 flex rounded-xl bg-white/10 p-4 hover:bg-white/20"
+              onClick={() => setIsRevealed((state) => !state)}
+            >
+              {isRevealed ? <PiEyeSlashBold /> : <PiEyeBold />}
+            </div>
             <div className="absolute right-0 top-2.5 m-4 rounded-xl bg-white/10 p-4">
-              <p>{`Success: ${successCounter}`}</p>
+              <p>{`Correct: ${successCounter}`}</p>
               <p>{`Wrong: ${wrongCounter}`}</p>
             </div>
             <h1
               ref={scriptRef}
               className="text-7xl font-extrabold tracking-tight text-white sm:text-8xl"
             >
-              {getScript(scriptIndex, currentScripts)?.[scriptType]}
+              {isRevealed ? script?.romaji : script?.[scriptType]}
             </h1>
             <input
               autoFocus
