@@ -87,7 +87,7 @@ export function ScriptMatcher({
       const value = event.target.value;
 
       if (value.length !== romaji.length) {
-        setValue(event.target.value);
+        setValue(event.target.value.toLowerCase());
         return;
       }
 
@@ -98,7 +98,7 @@ export function ScriptMatcher({
         onReset();
       }
     } else {
-      setValue(event.target.value);
+      setValue(event.target.value.toLowerCase());
     }
   };
 
