@@ -13,10 +13,6 @@ export const metadata = {
   icons: [{ rel: "icon", url: "/favicon.svg" }],
 };
 
-export const viewport = {
-  interactiveWidget: "overlays-content",
-};
-
 export default function RootLayout({
   children,
 }: {
