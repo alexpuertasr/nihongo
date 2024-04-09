@@ -160,6 +160,10 @@ export function ScriptMatcher({
     }
   };
 
+  const handleOnRemove = (index: number) => {
+    setRenderedScripts((state) => state.filter((_, i) => i !== index));
+  };
+
   return (
     <>
       <div className="container flex flex-col items-center justify-center gap-12 px-4 py-16">
@@ -191,10 +195,11 @@ export function ScriptMatcher({
               <p>{`Wrong: ${wrongCounter}`}</p>
             </div>
             <div className="flex">
-              {renderedScripts.map((script) => {
+              {renderedScripts.map((script, index) => {
                 const isCurrent = script.status === "current";
                 return (
                   <ScriptMatcherItem
+                    index={index}
                     key={script.romaji}
                     ref={isCurrent ? currentScriptRef : undefined}
                     isFirstScript={renderedScripts.length === 1}
@@ -203,6 +208,7 @@ export function ScriptMatcher({
                     status={script.status}
                     script={script[scriptType]}
                     romaji={script.romaji}
+                    onRemove={handleOnRemove}
                   />
                 );
               })}

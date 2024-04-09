@@ -1,14 +1,16 @@
-import { forwardRef } from "react";
+import { forwardRef, useEffect, useRef } from "react";
 
 import type { Status } from "./script-matcher";
 
 interface Props {
+  index: number;
   isFirstScript: boolean;
   isRevealed?: boolean;
   isCorrect?: boolean;
   status: Status;
   script: string;
   romaji: string;
+  onRemove: (index: number) => void;
 }
 
 const getAnimationStage = (isFirstScript: boolean, status: Status) => {
@@ -24,9 +26,32 @@ const getAnimationStage = (isFirstScript: boolean, status: Status) => {
 };
 
 const ScriptMatcherItem = forwardRef<HTMLHeadingElement, Props>(
-  ({ isFirstScript, isRevealed, isCorrect, status, script, romaji }, ref) => {
+  (
+    {
+      index,
+      isFirstScript,
+      isRevealed,
+      isCorrect,
+      status,
+      script,
+      romaji,
+      onRemove,
+    },
+    ref,
+  ) => {
+    const containerRef = useRef<HTMLHeadingElement>(null);
+
+    useEffect(() => {
+      if (status === "removing" && containerRef.current) {
+        containerRef.current.addEventListener("animationend", () => {
+          onRemove(index);
+        });
+      }
+    }, [containerRef, index, status, onRemove]);
+
     return (
       <div
+        ref={containerRef}
         className={`w-36 text-center ${isCorrect !== undefined ? (isCorrect ? "text-green-500" : "text-red-500") : ""} ${status !== "current" ? "absolute" : ""} ${getAnimationStage(isFirstScript, status)}`}
       >
         <h1
