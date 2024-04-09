@@ -17,9 +17,24 @@ export default {
           "50%": { transform: "translateX(10px)", color: colors.red[500] },
           "100%": { color: "inherit" },
         },
+        "fade-in": {
+          "0%": { opacity: "0" },
+          "100%": { opacity: "1" },
+        },
+        "slide-out": {
+          "0%": { transform: "translateX(0) scale(1)" },
+          "100%": { transform: "translateX(-100%) scale(0.6)" },
+        },
+        "slide-fade-out": {
+          "0%": { transform: "translateX(-100%) scale(0.6)", opacity: "1" },
+          "100%": { transform: "translateX(-100%) scale(0.6)", opacity: "0" },
+        },
       },
       animation: {
         "wrong-shake": "wrong-shake 0.5s ease-in-out",
+        "fade-in": "fade-in 1s forwards",
+        "slide-out": "slide-out 1s forwards",
+        "slide-fade-out": "slide-fade-out 1s forwards",
       },
     },
   },

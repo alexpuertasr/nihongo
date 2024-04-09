@@ -10,10 +10,41 @@ import {
   scripts,
 } from "@/lib/scripts";
 
+import { ScriptMatcherItem } from "./script-matcher-item";
+
 interface Props {
   isQuickMode?: boolean;
-  scriptType: "hiragana" | "katakana";
+  scriptType: ScriptType;
   defaultScriptIndex: number | undefined;
+}
+
+export type ScriptType = "hiragana" | "katakana";
+
+export type Status = "current" | "previous" | "removing";
+
+export type RenderedScript = Script & { correct?: boolean; status: Status };
+
+function passNextState(opts: {
+  isCurrentCorrect: boolean;
+  renderedScripts: RenderedScript[];
+}): RenderedScript[] {
+  return opts.renderedScripts.map((script) => ({
+    ...script,
+    status: script.status === "current" ? "previous" : "removing",
+    ...(script.status === "current" && { correct: opts.isCurrentCorrect }),
+  }));
+}
+
+function getNewRenderedScript(scripts: Script[]): [RenderedScript, number] {
+  const newScriptIndex = getRandomScriptIndex(scripts)!;
+  const newScript = scripts[newScriptIndex]!;
+
+  const newRenderedScript: RenderedScript = {
+    status: "current",
+    ...newScript,
+  };
+
+  return [newRenderedScript, newScriptIndex];
 }
 
 export function ScriptMatcher({
@@ -27,12 +58,32 @@ export function ScriptMatcher({
   const [successCounter, setSuccessCounter] = useState(0);
   const [currentScripts, setCurrentScripts] = useState(scripts);
   const [scriptIndex, setScriptIndex] = useState(defaultScriptIndex);
-  const scriptRef = useRef<HTMLHeadingElement>(null);
+  const currentScriptRef = useRef<HTMLHeadingElement>(null);
 
   const script = getScript(scriptIndex, currentScripts) ?? null;
 
-  const onReset = (scripts: Script[] = currentScripts) => {
-    setScriptIndex(getRandomScriptIndex(scripts));
+  const [renderedScripts, setRenderedScripts] = useState<RenderedScript[]>(
+    script ? [{ ...script, status: "current" }] : [],
+  );
+
+  const onPassScript = (opts: { isCorrect: boolean; scripts?: Script[] }) => {
+    const [newRenderedScript, newScriptIndex] = getNewRenderedScript(
+      opts.scripts ?? currentScripts,
+    );
+
+    setRenderedScripts((state) => [
+      ...passNextState({
+        isCurrentCorrect: opts.isCorrect,
+        renderedScripts: state,
+      }),
+      newRenderedScript,
+    ]);
+
+    if (!opts.isCorrect) {
+      setWrongCounter((state) => ++state);
+    }
+
+    setScriptIndex(newScriptIndex);
     setValue("");
   };
 
@@ -46,34 +97,44 @@ export function ScriptMatcher({
       setCurrentScripts(newScripts);
     }
 
-    onReset(newScripts);
+    onPassScript({ isCorrect: true, scripts: newScripts });
   };
 
-  const onWrong = () => {
+  const onIncorrectAttempted = () => {
     setWrongCounter((state) => ++state);
 
-    if (scriptRef.current) {
-      scriptRef.current.classList.add("animate-wrong-shake");
-      scriptRef.current.classList.add("text-red-500");
+    if (currentScriptRef.current) {
+      currentScriptRef.current.classList.add("animate-wrong-shake");
+      currentScriptRef.current.classList.add("text-red-500");
 
-      scriptRef.current.addEventListener("animationend", () => {
-        scriptRef.current?.classList.remove("animate-wrong-shake");
+      currentScriptRef.current.addEventListener("animationend", () => {
+        currentScriptRef.current?.classList.remove("animate-wrong-shake");
+        currentScriptRef.current?.classList.remove("text-red-500");
       });
     }
   };
 
   const handleOnReset = () => {
+    const [newRenderedScript, newScriptIndex] = getNewRenderedScript(scripts);
+
     setCurrentScripts(scripts);
-    onReset(scripts);
+    setRenderedScripts([newRenderedScript]);
+    setScriptIndex(newScriptIndex);
+    setValue("");
   };
 
   const handleOnKeyDown = (event: KeyboardEvent<HTMLInputElement>) => {
     if (!script || event.code !== "Enter") return;
 
-    if (event.currentTarget.value === script.romaji) {
-      onCorrect();
+    if (event.currentTarget.value === "") {
+      onPassScript({ isCorrect: false });
+      return;
+    }
+
+    if (event.currentTarget.value !== script.romaji) {
+      onIncorrectAttempted();
     } else {
-      onWrong();
+      onCorrect();
     }
   };
 
@@ -89,11 +150,10 @@ export function ScriptMatcher({
         return;
       }
 
-      if (value === romaji) {
-        onCorrect();
+      if (value !== romaji) {
+        onPassScript({ isCorrect: false });
       } else {
-        onWrong();
-        onReset();
+        onCorrect();
       }
     } else {
       setValue(event.target.value.toLowerCase());
@@ -130,12 +190,23 @@ export function ScriptMatcher({
               <p>{`Correct: ${successCounter}`}</p>
               <p>{`Wrong: ${wrongCounter}`}</p>
             </div>
-            <h1
-              ref={scriptRef}
-              className="text-7xl font-extrabold tracking-tight text-white sm:text-8xl"
-            >
-              {isRevealed ? script?.romaji : script?.[scriptType]}
-            </h1>
+            <div className="flex">
+              {renderedScripts.map((script) => {
+                const isCurrent = script.status === "current";
+                return (
+                  <ScriptMatcherItem
+                    key={script.romaji}
+                    ref={isCurrent ? currentScriptRef : undefined}
+                    isFirstScript={renderedScripts.length === 1}
+                    isRevealed={isCurrent && isRevealed}
+                    isCorrect={script.correct}
+                    status={script.status}
+                    script={script[scriptType]}
+                    romaji={script.romaji}
+                  />
+                );
+              })}
+            </div>
             <input
               autoFocus
               className="bg-transparent text-center focus:outline-none"
