@@ -9,6 +9,9 @@ export default {
       fontFamily: {
         sans: ["var(--font-sans)", ...fontFamily.sans],
       },
+      scale: {
+        "40": "0.4",
+      },
       keyframes: {
         "wrong-shake": {
           "0%": { color: "inherit" },
@@ -23,11 +26,11 @@ export default {
         },
         "slide-out": {
           "0%": { transform: "translateX(0) scale(1)" },
-          "100%": { transform: "translateX(-100%) scale(0.6)" },
+          "100%": { transform: "translateX(-100%) scale(0.4)" },
         },
         "slide-fade-out": {
-          "0%": { transform: "translateX(-100%) scale(0.6)", opacity: "1" },
-          "100%": { transform: "translateX(-100%) scale(0.6)", opacity: "0" },
+          "0%": { transform: "translateX(-100%) scale(0.4)", opacity: "1" },
+          "100%": { transform: "translateX(-100%) scale(0.4)", opacity: "0" },
         },
       },
       animation: {
