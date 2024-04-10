@@ -52,8 +52,8 @@ export function ScriptMatcher({
   defaultScriptIndex,
 }: Props) {
   const [value, setValue] = useState("");
-  const [wrongCounter, setWrongCounter] = useState(0);
-  const [successCounter, setSuccessCounter] = useState(0);
+  const [correctCounter, setCorrectCounter] = useState(0);
+  const [incorrectCounter, setIncorrectCounter] = useState(0);
   const [currentScripts, setCurrentScripts] = useState(scripts);
   const [scriptIndex, setScriptIndex] = useState(defaultScriptIndex);
   const currentScriptRef = useRef<HTMLHeadingElement>(null);
@@ -78,7 +78,7 @@ export function ScriptMatcher({
     ]);
 
     if (!opts.isCorrect) {
-      setWrongCounter((state) => ++state);
+      setIncorrectCounter((state) => ++state);
     }
 
     setScriptIndex(newScriptIndex);
@@ -91,7 +91,7 @@ export function ScriptMatcher({
     if (scriptIndex !== undefined) {
       newScripts = [...currentScripts];
       newScripts.splice(scriptIndex, 1);
-      setSuccessCounter((state) => ++state);
+      setCorrectCounter((state) => ++state);
       setCurrentScripts(newScripts);
     }
 
@@ -99,7 +99,7 @@ export function ScriptMatcher({
   };
 
   const onIncorrectAttempted = () => {
-    setWrongCounter((state) => ++state);
+    setIncorrectCounter((state) => ++state);
 
     if (currentScriptRef.current) {
       currentScriptRef.current.classList.add("animate-wrong-shake");
@@ -175,8 +175,8 @@ export function ScriptMatcher({
         ) : (
           <>
             <div className="absolute right-0 top-0 m-4 rounded-xl bg-white/10 p-4">
-              <p>{`Correct: ${successCounter}`}</p>
-              <p>{`Wrong: ${wrongCounter}`}</p>
+              <p>{`Correct: ${correctCounter}`}</p>
+              <p>{`Wrong: ${incorrectCounter}`}</p>
             </div>
             <div className="flex">
               {renderedScripts.map((script, index) => {
@@ -205,7 +205,9 @@ export function ScriptMatcher({
                 onChange={handleOnChange}
                 onKeyDown={handleOnKeyDown}
               />
-              <div className="absolute top-16 h-2.5 w-full rounded-full bg-white/10">
+              <div
+                className={`absolute top-16 h-2.5 w-full rounded-full bg-white/10 opacity-0 ${correctCounter > 0 ? "animate-fade-in" : ""}`}
+              >
                 <div
                   className="h-2.5 min-w-2.5 rounded-full bg-blue-600"
                   style={{
