@@ -1,7 +1,6 @@
 "use client";
 
 import { type ChangeEvent, type KeyboardEvent, useRef, useState } from "react";
-import { PiEyeBold, PiEyeSlashBold } from "react-icons/pi";
 
 import {
   type Script,
@@ -53,7 +52,6 @@ export function ScriptMatcher({
   defaultScriptIndex,
 }: Props) {
   const [value, setValue] = useState("");
-  const [isRevealed, setIsRevealed] = useState(false);
   const [wrongCounter, setWrongCounter] = useState(0);
   const [successCounter, setSuccessCounter] = useState(0);
   const [currentScripts, setCurrentScripts] = useState(scripts);
@@ -176,21 +174,7 @@ export function ScriptMatcher({
           </>
         ) : (
           <>
-            <div className="absolute top-0 h-2.5 w-full bg-white/10">
-              <div
-                className="h-2.5 bg-blue-600"
-                style={{
-                  width: `${((scripts.length - currentScripts.length) / scripts.length) * 100}%`,
-                }}
-              />
-            </div>
-            <div
-              className="fixed left-14 top-2.5 m-4 flex rounded-xl bg-white/10 p-4 hover:bg-white/20"
-              onClick={() => setIsRevealed((state) => !state)}
-            >
-              {isRevealed ? <PiEyeSlashBold /> : <PiEyeBold />}
-            </div>
-            <div className="absolute right-0 top-2.5 m-4 rounded-xl bg-white/10 p-4">
+            <div className="absolute right-0 top-0 m-4 rounded-xl bg-white/10 p-4">
               <p>{`Correct: ${successCounter}`}</p>
               <p>{`Wrong: ${wrongCounter}`}</p>
             </div>
@@ -203,7 +187,6 @@ export function ScriptMatcher({
                     key={script.romaji}
                     ref={isCurrent ? currentScriptRef : undefined}
                     isFirstScript={renderedScripts.length === 1}
-                    isRevealed={isCurrent && isRevealed}
                     isCorrect={script.correct}
                     status={script.status}
                     script={script[scriptType]}
@@ -213,14 +196,24 @@ export function ScriptMatcher({
                 );
               })}
             </div>
-            <input
-              autoFocus
-              className="bg-transparent text-center focus:outline-none"
-              value={value}
-              placeholder="Type the romaji..."
-              onChange={handleOnChange}
-              onKeyDown={handleOnKeyDown}
-            />
+            <div className="relative">
+              <input
+                autoFocus
+                className="bg-transparent text-center focus:outline-none"
+                value={value}
+                placeholder="Type the romaji..."
+                onChange={handleOnChange}
+                onKeyDown={handleOnKeyDown}
+              />
+              <div className="absolute top-16 h-2.5 w-full rounded-full bg-white/10">
+                <div
+                  className="h-2.5 min-w-2.5 rounded-full bg-blue-600"
+                  style={{
+                    width: `${((scripts.length - currentScripts.length) / scripts.length) * 100}%`,
+                  }}
+                />
+              </div>
+            </div>
           </>
         )}
       </div>

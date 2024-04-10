@@ -2,7 +2,7 @@ import Link from "next/link";
 
 export default async function Page() {
   return (
-    <div className="flex flex-1 flex-col items-center justify-center gap-4">
+    <>
       <h1 className="text-5xl font-extrabold tracking-tight text-white sm:text-[5rem]">
         Nihon<span className="text-[hsl(350,100%,70%)]">go</span>
       </h1>
@@ -26,6 +26,6 @@ export default async function Page() {
           </div>
         </Link>
       </div>
-    </div>
+    </>
   );
 }
