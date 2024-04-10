@@ -52,7 +52,7 @@ const ScriptMatcherItem = forwardRef<HTMLHeadingElement, Props>(
     return (
       <div
         ref={containerRef}
-        className={`w-36 text-center ${isCorrect !== undefined ? (isCorrect ? "text-green-500" : "text-red-500") : ""} ${status !== "current" ? "absolute" : ""} ${getAnimationStage(isFirstScript, status)}`}
+        className={`w-36 text-center sm:w-48 ${isCorrect !== undefined ? (isCorrect ? "text-green-500" : "text-red-500") : ""} ${status !== "current" ? "absolute" : ""} ${getAnimationStage(isFirstScript, status)}`}
       >
         <h1
           ref={ref}
