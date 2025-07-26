@@ -34,5 +34,5 @@
     "typescript": "5.8.3",
     "typescript-eslint": "8.38.0"
   },
-  "packageManager": "pnpm@8.15.2"
+  "packageManager": "pnpm@10.13.1"
 }
