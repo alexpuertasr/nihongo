@@ -223,7 +223,7 @@ export function ScriptMatcher({
           <div className="relative">
             <input
               autoFocus
-              className="bg-transparent text-center focus:outline-none"
+              className="bg-transparent text-center focus:outline-hidden"
               value={value}
               placeholder="Type the romaji..."
               onChange={handleOnChange}
