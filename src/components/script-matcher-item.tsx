@@ -25,8 +25,8 @@ const getAnimationStage = (isFirstScript: boolean, status: Status) => {
   }
 };
 
-const ScriptMatcherItem = forwardRef<HTMLHeadingElement, Props>(
-  (
+export const ScriptMatcherItem = forwardRef<HTMLHeadingElement, Props>(
+  function ScriptMatcherItem(
     {
       index,
       isFirstScript,
@@ -38,7 +38,7 @@ const ScriptMatcherItem = forwardRef<HTMLHeadingElement, Props>(
       onRemove,
     },
     ref,
-  ) => {
+  ) {
     const containerRef = useRef<HTMLHeadingElement>(null);
 
     useEffect(() => {
@@ -67,7 +67,3 @@ const ScriptMatcherItem = forwardRef<HTMLHeadingElement, Props>(
     );
   },
 );
-
-ScriptMatcherItem.displayName = "ScriptMatcherItem";
-
-export { ScriptMatcherItem };
