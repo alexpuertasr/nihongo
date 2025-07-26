@@ -62,6 +62,7 @@ export function ScriptMatcher({
   const [currentScripts, setCurrentScripts] = useState(scripts);
   const [scriptIndex, setScriptIndex] = useState(defaultScriptIndex);
   const currentScriptRef = useRef<HTMLHeadingElement>(null);
+  const inputRef = useRef<HTMLInputElement>(null);
 
   const script = getScript(scriptIndex, currentScripts) ?? null;
 
@@ -117,7 +118,7 @@ export function ScriptMatcher({
     }
   };
 
-  const handleOnReset = () => {
+  const handleReset = () => {
     const [newRenderedScript, newScriptIndex] = getNewRenderedScript(scripts);
 
     setCorrectCounter(0);
@@ -128,7 +129,7 @@ export function ScriptMatcher({
     setValue("");
   };
 
-  const handleOnKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
+  const handleKeyDownInput = (event: React.KeyboardEvent<HTMLInputElement>) => {
     if (!script || event.code !== "Enter") return;
 
     if (event.currentTarget.value === "") {
@@ -143,7 +144,7 @@ export function ScriptMatcher({
     }
   };
 
-  const handleOnChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChangeInput = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (!script) return;
 
     if (isQuickMode) {
@@ -165,7 +166,11 @@ export function ScriptMatcher({
     }
   };
 
-  const handleOnRemove = (index: number) => {
+  const handleClickScript = () => {
+    inputRef.current?.focus();
+  };
+
+  const handleRemoveScript = (index: number) => {
     setRenderedScripts((state) => state.filter((_, i) => i !== index));
   };
 
@@ -176,33 +181,31 @@ export function ScriptMatcher({
           <h1 className="text-5xl font-extrabold tracking-tight text-white sm:text-[5rem]">
             Congrats! 🎉
           </h1>
-          <button onClick={handleOnReset}>Practice again</button>
+          <button onClick={handleReset}>Practice again</button>
         </>
       ) : (
         <>
           <button
             className="absolute left-14 top-0 m-4 flex rounded-xl bg-white/10 p-4 hover:bg-white/20"
-            onClick={handleOnReset}
+            onClick={handleReset}
           >
             <PiArrowClockwiseBold />
           </button>
           <div className="flex">
-            {renderedScripts.map((script, index) => {
-              const isCurrent = script.status === "current";
-              return (
-                <ScriptMatcherItem
-                  index={index}
-                  key={script.romaji}
-                  ref={isCurrent ? currentScriptRef : undefined}
-                  isFirstScript={renderedScripts.length === 1}
-                  isCorrect={script.correct}
-                  status={script.status}
-                  script={script[scriptType]}
-                  romaji={script.romaji}
-                  onRemove={handleOnRemove}
-                />
-              );
-            })}
+            {renderedScripts.map((script, index) => (
+              <ScriptMatcherItem
+                index={index}
+                key={script.romaji}
+                ref={script.status === "current" ? currentScriptRef : undefined}
+                isFirstScript={renderedScripts.length === 1}
+                isCorrect={script.correct}
+                status={script.status}
+                script={script[scriptType]}
+                romaji={script.romaji}
+                onClick={handleClickScript}
+                onRemove={handleRemoveScript}
+              />
+            ))}
             <div
               className={`absolute flex h-[104px] w-36 translate-x-full scale-40 flex-col items-center justify-between opacity-0 sm:h-32 sm:w-48 ${correctCounter > 0 || incorrectCounter > 0 ? "animate-fade-in" : ""}`}
             >
@@ -222,12 +225,12 @@ export function ScriptMatcher({
           </div>
           <div className="relative">
             <input
-              autoFocus
+              ref={inputRef}
               className="focus:outline-hidden bg-transparent text-center"
               value={value}
               placeholder="Type the romaji..."
-              onChange={handleOnChange}
-              onKeyDown={handleOnKeyDown}
+              onChange={handleChangeInput}
+              onKeyDown={handleKeyDownInput}
             />
             <div
               className={`absolute top-16 h-2.5 w-full rounded-full bg-white/10 opacity-0 ${correctCounter > 0 ? "animate-fade-in" : ""}`}

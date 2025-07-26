@@ -2,7 +2,7 @@ import { forwardRef, useEffect, useRef } from "react";
 
 import type { Status } from "./script-matcher";
 
-interface Props {
+interface Props extends React.HTMLAttributes<HTMLHeadingElement> {
   index: number;
   isFirstScript: boolean;
   isRevealed?: boolean;
@@ -36,6 +36,7 @@ export const ScriptMatcherItem = forwardRef<HTMLHeadingElement, Props>(
       script,
       romaji,
       onRemove,
+      ...rest
     },
     ref,
   ) {
@@ -53,6 +54,7 @@ export const ScriptMatcherItem = forwardRef<HTMLHeadingElement, Props>(
       <div
         ref={containerRef}
         className={`w-36 text-center sm:w-48 ${isCorrect !== undefined ? (isCorrect ? "text-green-500" : "text-red-500") : ""} ${status !== "current" ? "absolute" : ""} ${getAnimationStage(isFirstScript, status)}`}
+        {...rest}
       >
         <h1
           ref={ref}
