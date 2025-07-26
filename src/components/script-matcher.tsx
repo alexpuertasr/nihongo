@@ -10,10 +10,9 @@ import {
 } from "@/lib/scripts";
 
 import { ScriptMatcherItem } from "./script-matcher-item";
-import { CircleCheck, CircleX, RotateCw } from "lucide-react";
+import { CircleCheck, CircleX, RotateCw, Zap, ZapOff } from "lucide-react";
 
 interface Props {
-  isQuickMode?: boolean;
   scriptType: ScriptType;
   defaultScriptIndex: number | undefined;
 }
@@ -47,12 +46,9 @@ function getNewRenderedScript(scripts: Script[]): [RenderedScript, number] {
   return [newRenderedScript, newScriptIndex];
 }
 
-export function ScriptMatcher({
-  isQuickMode,
-  scriptType,
-  defaultScriptIndex,
-}: Props) {
+export function ScriptMatcher({ scriptType, defaultScriptIndex }: Props) {
   const [value, setValue] = useState("");
+  const [isFastMode, setIsFastMode] = useState(false);
   const [correctCounter, setCorrectCounter] = useState(0);
   const [incorrectCounter, setIncorrectCounter] = useState(0);
   const [currentScripts, setCurrentScripts] = useState(scripts);
@@ -125,6 +121,10 @@ export function ScriptMatcher({
     setValue("");
   };
 
+  const handleSwitchMode = () => {
+    setIsFastMode((prev) => !prev);
+  };
+
   const handleKeyDownInput = (event: React.KeyboardEvent<HTMLInputElement>) => {
     if (!script || event.code !== "Enter") return;
 
@@ -143,7 +143,7 @@ export function ScriptMatcher({
   const handleChangeInput = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (!script) return;
 
-    if (isQuickMode) {
+    if (isFastMode) {
       const romaji = script.romaji;
       const value = event.target.value;
 
@@ -182,10 +182,18 @@ export function ScriptMatcher({
       ) : (
         <>
           <button
+            aria-label="Reset"
             className="absolute left-14 top-0 m-4 flex rounded-xl bg-white/10 p-4 hover:bg-white/20"
             onClick={handleReset}
           >
             <RotateCw size={16} />
+          </button>
+          <button
+            aria-label={isFastMode ? "Normal mode" : "Fast mode"}
+            className="absolute left-28 top-0 m-4 flex rounded-xl bg-white/10 p-4 hover:bg-white/20"
+            onClick={handleSwitchMode}
+          >
+            {isFastMode ? <ZapOff size={16} /> : <Zap size={16} />}
           </button>
           <div className="flex">
             {renderedScripts.map((script, index) => (
