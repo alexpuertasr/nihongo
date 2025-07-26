@@ -1,5 +1,5 @@
+import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
-import { PiArrowLeftBold } from "react-icons/pi";
 
 export default function RootLayout({ children }: React.PropsWithChildren) {
   return (
@@ -9,7 +9,7 @@ export default function RootLayout({ children }: React.PropsWithChildren) {
         className="absolute left-0 top-0 m-4 flex rounded-xl bg-white/10 p-4 hover:bg-white/20"
         href="/"
       >
-        <PiArrowLeftBold />
+        <ArrowLeft size={16} />
       </Link>
     </>
   );

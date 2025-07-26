@@ -1,11 +1,6 @@
 "use client";
 
 import { useRef, useState } from "react";
-import {
-  PiArrowClockwiseBold,
-  PiCheckCircleBold,
-  PiXCircleBold,
-} from "react-icons/pi";
 
 import {
   type Script,
@@ -15,6 +10,7 @@ import {
 } from "@/lib/scripts";
 
 import { ScriptMatcherItem } from "./script-matcher-item";
+import { CircleCheck, CircleX, RotateCw } from "lucide-react";
 
 interface Props {
   isQuickMode?: boolean;
@@ -189,7 +185,7 @@ export function ScriptMatcher({
             className="absolute left-14 top-0 m-4 flex rounded-xl bg-white/10 p-4 hover:bg-white/20"
             onClick={handleReset}
           >
-            <PiArrowClockwiseBold />
+            <RotateCw size={16} />
           </button>
           <div className="flex">
             {renderedScripts.map((script, index) => (
@@ -210,13 +206,13 @@ export function ScriptMatcher({
               className={`absolute flex h-[104px] w-36 translate-x-full scale-40 flex-col items-center justify-between opacity-0 sm:h-32 sm:w-48 ${correctCounter > 0 || incorrectCounter > 0 ? "animate-fade-in" : ""}`}
             >
               <div className="flex items-center gap-2 text-green-500">
-                <PiCheckCircleBold className="h-11 w-11 sm:h-16" />
+                <CircleCheck className="h-11 w-11 sm:h-16" />
                 <p className="w-10 text-center text-3xl font-bold sm:text-4xl">
                   {correctCounter}
                 </p>
               </div>
               <div className="flex items-center gap-2 text-red-500">
-                <PiXCircleBold className="h-11 w-11 sm:h-16" />
+                <CircleX className="h-11 w-11 sm:h-16" />
                 <p className="w-10 text-center text-3xl font-bold sm:text-4xl">
                   {incorrectCounter}
                 </p>
