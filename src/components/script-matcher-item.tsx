@@ -47,7 +47,7 @@ const ScriptMatcherItem = forwardRef<HTMLHeadingElement, Props>(
           onRemove(index);
         });
       }
-    }, [containerRef, index, status, onRemove]);
+    }, [index, status, onRemove]);
 
     return (
       <div

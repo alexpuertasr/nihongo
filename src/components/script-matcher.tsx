@@ -170,80 +170,78 @@ export function ScriptMatcher({
   };
 
   return (
-    <>
-      <div className="container flex flex-col items-center justify-center gap-12 px-4 py-16">
-        {!currentScripts.length ? (
-          <>
-            <h1 className="text-5xl font-extrabold tracking-tight text-white sm:text-[5rem]">
-              Congrats! 🎉
-            </h1>
-            <button onClick={handleOnReset}>Practice again</button>
-          </>
-        ) : (
-          <>
-            <div
-              className="absolute left-14 top-0 m-4 flex rounded-xl bg-white/10 p-4 hover:bg-white/20"
-              onClick={handleOnReset}
-            >
-              <PiArrowClockwiseBold />
-            </div>
-            <div className="flex">
-              {renderedScripts.map((script, index) => {
-                const isCurrent = script.status === "current";
-                return (
-                  <ScriptMatcherItem
-                    index={index}
-                    key={script.romaji}
-                    ref={isCurrent ? currentScriptRef : undefined}
-                    isFirstScript={renderedScripts.length === 1}
-                    isCorrect={script.correct}
-                    status={script.status}
-                    script={script[scriptType]}
-                    romaji={script.romaji}
-                    onRemove={handleOnRemove}
-                  />
-                );
-              })}
-              <div
-                className={`scale-40 absolute flex h-[104px] w-36 translate-x-full flex-col items-center justify-between opacity-0 sm:h-32 sm:w-48 ${correctCounter > 0 || incorrectCounter > 0 ? "animate-fade-in" : ""}`}
-              >
-                <div className="flex items-center gap-2 text-green-500">
-                  <PiCheckCircleBold className="h-11 w-11 sm:h-16" />
-                  <p className="w-10 text-center text-3xl font-bold sm:text-4xl">
-                    {correctCounter}
-                  </p>
-                </div>
-                <div className="flex items-center gap-2 text-red-500">
-                  <PiXCircleBold className="h-11 w-11 sm:h-16" />
-                  <p className="w-10 text-center text-3xl font-bold sm:text-4xl">
-                    {incorrectCounter}
-                  </p>
-                </div>
-              </div>
-            </div>
-            <div className="relative">
-              <input
-                autoFocus
-                className="bg-transparent text-center focus:outline-none"
-                value={value}
-                placeholder="Type the romaji..."
-                onChange={handleOnChange}
-                onKeyDown={handleOnKeyDown}
-              />
-              <div
-                className={`absolute top-16 h-2.5 w-full rounded-full bg-white/10 opacity-0 ${correctCounter > 0 ? "animate-fade-in" : ""}`}
-              >
-                <div
-                  className="h-2.5 min-w-2.5 rounded-full bg-blue-600"
-                  style={{
-                    width: `${((scripts.length - currentScripts.length) / scripts.length) * 100}%`,
-                  }}
+    <div className="container flex flex-col items-center justify-center gap-12 px-4 py-16">
+      {!currentScripts.length ? (
+        <>
+          <h1 className="text-5xl font-extrabold tracking-tight text-white sm:text-[5rem]">
+            Congrats! 🎉
+          </h1>
+          <button onClick={handleOnReset}>Practice again</button>
+        </>
+      ) : (
+        <>
+          <button
+            className="absolute left-14 top-0 m-4 flex rounded-xl bg-white/10 p-4 hover:bg-white/20"
+            onClick={handleOnReset}
+          >
+            <PiArrowClockwiseBold />
+          </button>
+          <div className="flex">
+            {renderedScripts.map((script, index) => {
+              const isCurrent = script.status === "current";
+              return (
+                <ScriptMatcherItem
+                  index={index}
+                  key={script.romaji}
+                  ref={isCurrent ? currentScriptRef : undefined}
+                  isFirstScript={renderedScripts.length === 1}
+                  isCorrect={script.correct}
+                  status={script.status}
+                  script={script[scriptType]}
+                  romaji={script.romaji}
+                  onRemove={handleOnRemove}
                 />
+              );
+            })}
+            <div
+              className={`absolute flex h-[104px] w-36 translate-x-full scale-40 flex-col items-center justify-between opacity-0 sm:h-32 sm:w-48 ${correctCounter > 0 || incorrectCounter > 0 ? "animate-fade-in" : ""}`}
+            >
+              <div className="flex items-center gap-2 text-green-500">
+                <PiCheckCircleBold className="h-11 w-11 sm:h-16" />
+                <p className="w-10 text-center text-3xl font-bold sm:text-4xl">
+                  {correctCounter}
+                </p>
+              </div>
+              <div className="flex items-center gap-2 text-red-500">
+                <PiXCircleBold className="h-11 w-11 sm:h-16" />
+                <p className="w-10 text-center text-3xl font-bold sm:text-4xl">
+                  {incorrectCounter}
+                </p>
               </div>
             </div>
-          </>
-        )}
-      </div>
-    </>
+          </div>
+          <div className="relative">
+            <input
+              autoFocus
+              className="bg-transparent text-center focus:outline-none"
+              value={value}
+              placeholder="Type the romaji..."
+              onChange={handleOnChange}
+              onKeyDown={handleOnKeyDown}
+            />
+            <div
+              className={`absolute top-16 h-2.5 w-full rounded-full bg-white/10 opacity-0 ${correctCounter > 0 ? "animate-fade-in" : ""}`}
+            >
+              <div
+                className="h-2.5 min-w-2.5 rounded-full bg-blue-600"
+                style={{
+                  width: `${((scripts.length - currentScripts.length) / scripts.length) * 100}%`,
+                }}
+              />
+            </div>
+          </div>
+        </>
+      )}
+    </div>
   );
 }
