@@ -6,6 +6,7 @@ export default function RootLayout({ children }: React.PropsWithChildren) {
     <>
       {children}
       <Link
+        aria-label="Back to home"
         className="absolute left-0 top-0 m-4 flex rounded-xl bg-white/10 p-4 hover:bg-white/20"
         href="/"
       >

@@ -11,7 +11,7 @@ export default async function Page() {
           className="flex max-w-xs flex-col gap-4 rounded-xl bg-white/10 p-4 text-white hover:bg-white/20"
           href="/hiragana"
         >
-          <h3 className="text-2xl font-bold">Hiragana →</h3>
+          <h2 className="text-2xl font-bold">Hiragana →</h2>
           <div className="text-lg">
             Practice all the hiragana <br /> (ひらがな) characters
           </div>
@@ -20,7 +20,7 @@ export default async function Page() {
           className="flex max-w-xs flex-col gap-4 rounded-xl bg-white/10 p-4 text-white hover:bg-white/20"
           href="/katakana"
         >
-          <h3 className="text-2xl font-bold">Katakana →</h3>
+          <h2 className="text-2xl font-bold">Katakana →</h2>
           <div className="text-lg">
             Practice all the katakana <br /> (カタカナ) characters
           </div>
