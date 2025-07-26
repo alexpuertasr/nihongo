@@ -1,6 +1,6 @@
 "use client";
 
-import { type ChangeEvent, type KeyboardEvent, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import {
   PiArrowClockwiseBold,
   PiCheckCircleBold,
@@ -128,7 +128,7 @@ export function ScriptMatcher({
     setValue("");
   };
 
-  const handleOnKeyDown = (event: KeyboardEvent<HTMLInputElement>) => {
+  const handleOnKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
     if (!script || event.code !== "Enter") return;
 
     if (event.currentTarget.value === "") {
@@ -143,7 +143,7 @@ export function ScriptMatcher({
     }
   };
 
-  const handleOnChange = (event: ChangeEvent<HTMLInputElement>) => {
+  const handleOnChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (!script) return;
 
     if (isQuickMode) {
@@ -223,7 +223,7 @@ export function ScriptMatcher({
           <div className="relative">
             <input
               autoFocus
-              className="bg-transparent text-center focus:outline-hidden"
+              className="focus:outline-hidden bg-transparent text-center"
               value={value}
               placeholder="Type the romaji..."
               onChange={handleOnChange}

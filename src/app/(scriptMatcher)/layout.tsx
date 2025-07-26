@@ -1,11 +1,7 @@
 import Link from "next/link";
 import { PiArrowLeftBold } from "react-icons/pi";
 
-export default function RootLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default function RootLayout({ children }: React.PropsWithChildren) {
   return (
     <>
       {children}

@@ -13,15 +13,11 @@ export const metadata = {
   icons: [{ rel: "icon", url: "/favicon.svg" }],
 };
 
-export default function RootLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default function RootLayout({ children }: React.PropsWithChildren) {
   return (
     <html lang="en">
       <body className={`font-sans ${inter.variable}`}>
-        <main className="flex h-dvh flex-col items-center justify-center gap-4 bg-linear-to-b from-[#111827] to-[#030712] text-white">
+        <main className="bg-linear-to-b flex h-dvh flex-col items-center justify-center gap-4 from-[#111827] to-[#030712] text-white">
           {children}
         </main>
       </body>
